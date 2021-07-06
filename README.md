@@ -4,13 +4,13 @@
 Module 11 weekly challenge assignment. This is a simple and straightforward, easy to track note-taking application.
 
 ## Table of Contents
-* [Installation](link)
-* [Usage](link)
-* [Contributing](link)
-* [Questions](link)
+* [Installation](https://github.com/savbennett8/note-taker#installation)
+* [Usage](https://github.com/savbennett8/note-taker#usage)
+* [Contributing](https://github.com/savbennett8/note-taker#contributing)
+* [Questions](https://github.com/savbennett8/note-taker#questions)
 
 ### Installation
-This application uses Express.js and Node.js. To simply run the application, you do not need to have these packages installed on your machine, but the links below provide instructions on how to install them. To get to the Note-Taker application website, click the link in the [Usage](link) section.
+This application uses Express.js and Node.js. To simply run the application, you do not need to have these packages installed on your machine, but the links below provide instructions on how to install them. To get to the Note-Taker application website, click the link in the [Usage](https://github.com/savbennett8/note-taker#usage) section.
 [Node.js](https://nodejs.org/en/download/package-manager/)
 [Express.js](https://expressjs.com/en/starter/installing.html)
 
