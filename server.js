@@ -1,58 +1,67 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const noteData = require('./db/db.json');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('public'));
 
-//get notes from public html file
+//get notes from public notes html file
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
 //or route to main page
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 //---- API Routes ----//
 
-app.route('/api/notes')
-    //get all notes - updates when notes are added or deleted
-    .get(function (req, res) {
-        res.json(noteData);
-    })
-    //post a note
-    .post(function (req, res) {
-        let filePath = path.join(__dirname, './db/db.json');
-        let newNote = req.body;
-        let id;
+const noteData = require('./db/db.json');
 
-        for (let i = 0; i < noteData.length; i++) {
-            let newNoteId = noteData[i];
-
-            if (newNoteId > noteData[i]) {
-                id = newNoteId.id
-            }
+//update the database when a new note is created or deleted
+function writeNotesTodb(notes) {
+    fs.writeFile('./db/db.json', JSON.stringify(notes), (err) => {
+        if (err) {
+            console.log(err);
         }
-
-        newNoteId.id = id + 1;
-        noteData.push(newNote);
-
-        fs.writeFile(filePath, JSON.stringify(noteData), (err) => {
-            if (err) {
-                return console.log(err);
-            }
-            console.log('Note successfully saved!');
-        });
-
-        res.json(newNote);
+        console.log('Database updated!');
+        return true;
     });
+};
+
+//get all notes
+app.get('/api/notes', (req, res) => {
+    res.json(noteData);
+});
+
+//create a new note
+app.post('/api/notes', (req, res) => {
+    let newNote = req.body;
+    //assign id based on index in array
+    req.body.id = noteData.length.toString();
+    noteData.push(newNote);
+    console.log('Note successfully created!');
+    writeNotesTodb(noteData);
+    res.json(req.body);
+});
+
+//delete note by id
+app.delete('/api/notes/:id', (req, res) => {
+    for (let i = 0; i < noteData.length; i++) {
+        if (noteData[i].id === req.params.id) {
+            noteData.splice(i, 1);
+            break;
+        }
+    }
+    console.log('Note successfully deleted!');
+    writeNotesTodb(noteData);
+    res.json(noteData);
+});
 
 app.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);
